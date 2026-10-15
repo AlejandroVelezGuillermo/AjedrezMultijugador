@@ -1,0 +1,14 @@
+{
+  "name": "chessarena",
+  "version": "1.0.0",
+  "description": "Ajedrez multijugador con diseño centrado en las personas",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "chess.js": "^1.4.0",
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  }
+}

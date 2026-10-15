@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1120">
+
+  <title>ChessArena | Ajedrez en línea</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="ChessArena, inicio">
+        <span class="brand-mark" aria-hidden="true">♞</span>
+        <span>Chess<span class="brand-accent">Arena</span></span>
+      </a>
+
+      <div class="topbar-note">
+        <span class="online-dot" aria-hidden="true"></span>
+        Ajedrez en tiempo real
+      </div>
+    </header>
+
+    <section id="menuScreen" class="screen menu-layout">
+      <div class="hero-copy">
+        <p class="eyebrow">JUEGA · COMPARTE · OBSERVA</p>
+
+        <h1>
+          Tu próxima partida
+          <br>
+          <span>comienza aquí.</span>
+        </h1>
+
+        <p class="hero-description">
+          Crea una sala privada, invita a un amigo con un código
+          o mira una partida en directo. Sin complicaciones.
+        </p>
+
+        <div class="feature-row">
+          <div class="feature">
+            <span class="feature-icon" aria-hidden="true">⚡</span>
+            <div>
+              <strong>En tiempo real</strong>
+              <small>Movimientos sincronizados</small>
+            </div>
+          </div>
+
+          <div class="feature">
+            <span class="feature-icon" aria-hidden="true">◉</span>
+            <div>
+              <strong>Modo espectador</strong>
+              <small>Sigue cada movimiento</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="panel entry-panel" aria-labelledby="entryTitle">
+        <div class="panel-heading">
+          <span class="panel-kicker">EMPIEZA A JUGAR</span>
+          <h2 id="entryTitle">Bienvenido a ChessArena</h2>
+          <p>¿Cómo quieres entrar a la partida?</p>
+        </div>
+
+        <label class="field-label" for="playerName">Tu nombre</label>
+
+        <input
+          id="playerName"
+          class="text-field"
+          maxlength="20"
+          autocomplete="nickname"
+          placeholder="Ej. Alejandro"
+          aria-describedby="nameHelp"
+        >
+
+        <small id="nameHelp" class="field-help">
+          Así te verán tu rival y los espectadores.
+        </small>
+
+        <button id="createBtn" class="button button-primary button-full">
+          <span aria-hidden="true">＋</span>
+          Crear una sala
+        </button>
+
+        <div class="separator">
+          <span>o entra con un código</span>
+        </div>
+
+        <label class="field-label" for="roomCode">Código de la sala</label>
+
+        <input
+          id="roomCode"
+          class="text-field code-field"
+          maxlength="6"
+          autocomplete="off"
+          placeholder="ABC123"
+          aria-describedby="codeHelp"
+        >
+
+        <small id="codeHelp" class="field-help">
+          Pide el código a la persona que creó la sala.
+        </small>
+
+        <div class="button-grid">
+          <button id="joinBtn" class="button button-secondary">
+            Jugar
+          </button>
+
+          <button id="spectateBtn" class="button button-quiet">
+            Observar
+          </button>
+        </div>
+
+        <p id="menuMessage" class="message" role="status" aria-live="polite"></p>
+      </section>
+    </section>
+
+    <section id="gameScreen" class="screen game-layout hidden">
+      <div class="game-heading">
+        <div>
+          <button id="backBtn" class="text-button">
+            ← Menú principal
+          </button>
+
+          <h1>La partida</h1>
+          <p id="roomSubtitle" class="muted">Sala privada</p>
+        </div>
+
+        <div class="room-code-box">
+          <span>CÓDIGO DE SALA</span>
+          <div>
+            <strong id="roomCodeDisplay">------</strong>
+            <button
+              id="copyCodeBtn"
+              class="copy-button"
+              aria-label="Copiar código de sala"
+              title="Copiar código"
+            >⧉</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-columns">
+        <section class="board-panel panel" aria-label="Tablero de ajedrez">
+          <div class="player-strip">
+            <div class="player-avatar avatar-dark" aria-hidden="true">♚</div>
+
+            <div class="player-details">
+              <strong id="blackName">Esperando jugador</strong>
+              <small id="blackMeta">Piezas negras</small>
+            </div>
+
+            <span id="blackTurnMark" class="turn-mark" aria-hidden="true"></span>
+          </div>
+
+          <div
+            id="chessBoard"
+            class="chess-board"
+            role="group"
+            aria-label="Tablero de ajedrez"
+          ></div>
+
+          <div class="player-strip">
+            <div class="player-avatar avatar-light" aria-hidden="true">♔</div>
+
+            <div class="player-details">
+              <strong id="whiteName">Jugador anfitrión</strong>
+              <small id="whiteMeta">Piezas blancas</small>
+            </div>
+
+            <span id="whiteTurnMark" class="turn-mark" aria-hidden="true"></span>
+          </div>
+
+          <p class="board-hint" id="boardHint">
+            Selecciona una de tus piezas para ver sus movimientos posibles.
+          </p>
+        </section>
+
+        <aside class="side-column">
+          <section
+            id="turnIndicator"
+            class="turn-indicator panel waiting-turn"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            <div class="turn-indicator-top">
+              <span id="turnDot" class="turn-dot" aria-hidden="true"></span>
+              <span id="turnBadge" class="turn-badge">EN ESPERA</span>
+            </div>
+
+            <h2 id="turnTitle">Esperando a otro jugador</h2>
+
+            <p id="turnDescription">
+              Comparte el código de la sala para comenzar.
+            </p>
+          </section>
+
+          <section class="panel info-panel">
+            <div class="section-title">
+              <span class="section-icon" aria-hidden="true">♟</span>
+              <div>
+                <h2>Jugadores</h2>
+                <p>Personas conectadas a la sala</p>
+              </div>
+            </div>
+
+            <div class="participant-line">
+              <span class="status-dot" aria-hidden="true"></span>
+              <span id="playersCount">1 de 2 jugadores</span>
+            </div>
+
+            <div class="participant-line">
+              <span class="spectator-icon" aria-hidden="true">◉</span>
+              <span id="spectatorsCount">0 espectadores</span>
+            </div>
+
+            <div class="soft-divider"></div>
+
+            <div class="section-title small-title">
+              <span class="section-icon" aria-hidden="true">ⓘ</span>
+              <div><h2>Cómo jugar</h2></div>
+            </div>
+
+            <ul class="help-list">
+              <li>Selecciona una pieza de tu color.</li>
+              <li>Los puntos verdes indican movimientos posibles.</li>
+              <li>Los círculos verdes indican capturas.</li>
+              <li>Solo puedes mover durante tu turno.</li>
+            </ul>
+          </section>
+
+          <button id="leaveBtn" class="button button-danger button-full">
+            Salir de la partida
+          </button>
+
+          <p id="gameMessage" class="message" role="status" aria-live="polite"></p>
+        </aside>
+      </div>
+    </section>
+
+    <section id="resultScreen" class="screen result-screen hidden" aria-live="polite">
+      <div class="result-card panel">
+        <div id="resultIcon" class="result-icon" aria-hidden="true">♔</div>
+
+        <p class="eyebrow">PARTIDA FINALIZADA</p>
+
+        <h1 id="resultTitle">Partida terminada</h1>
+
+        <p id="resultDescription" class="hero-description">
+          Gracias por jugar.
+        </p>
+
+        <button id="resultMenuBtn" class="button button-primary button-full">
+          Regresar al menú
+        </button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>ChessArena</span>
+      <span>Diseñada pensando en quienes juegan.</span>
+    </footer>
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+  <script src="/client.js"></script>
+</body>
+</html>
